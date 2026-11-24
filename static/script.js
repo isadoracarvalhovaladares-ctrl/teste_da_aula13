@@ -21,7 +21,7 @@ function persistProject() {
     saveTimer = setTimeout(() => savedStatus.classList.remove('visible'), 900);
 }
 
-function appendMessage(role, content, animate = true) {
+function appendMessage(role, content, animate = true, sources = []) {
     const row = document.createElement('div');
     row.className = `message ${role}`;
     if (!animate) row.style.animation = 'none';
@@ -29,6 +29,30 @@ function appendMessage(role, content, animate = true) {
     bubble.className = 'message-bubble';
     bubble.textContent = content;
     row.append(bubble);
+    if (role === 'assistant' && Array.isArray(sources) && sources.length) {
+        const sourceList = document.createElement('div');
+        sourceList.className = 'message-sources';
+        const label = document.createElement('span');
+        label.className = 'message-sources-label';
+        label.textContent = 'Fontes consultadas';
+        sourceList.append(label);
+
+        sources.forEach((source, index) => {
+            try {
+                const url = new URL(source.url);
+                if (!['http:', 'https:'].includes(url.protocol)) return;
+                const link = document.createElement('a');
+                link.href = url.href;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = `[${index + 1}] ${source.title || url.hostname}`;
+                sourceList.append(link);
+            } catch {
+                return;
+            }
+        });
+        if (sourceList.querySelector('a')) bubble.append(sourceList);
+    }
     messages.append(row);
     scrollArea.scrollTop = scrollArea.scrollHeight;
 }
@@ -53,7 +77,7 @@ function loadProject() {
         showConversation();
         history.forEach(item => {
             if (item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string') {
-                appendMessage(item.role, item.content, false);
+                appendMessage(item.role, item.content, false, item.sources);
             }
         });
     }
@@ -90,8 +114,8 @@ async function sendMessage(rawMessage) {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || 'Não foi possível obter uma resposta.');
-        history.push({ role: 'assistant', content: data.reply });
-        appendMessage('assistant', data.reply);
+        history.push({ role: 'assistant', content: data.reply, sources: data.sources || [] });
+        appendMessage('assistant', data.reply, true, data.sources);
         persistProject();
     } catch (error) {
         appendMessage('assistant', error.message || 'Ocorreu um erro. Tente novamente.');

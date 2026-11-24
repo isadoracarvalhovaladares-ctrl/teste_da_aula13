@@ -83,6 +83,9 @@ button, input, textarea { font: inherit; }
 .message-bubble { max-width: 78%; padding: 12px 15px; border-radius: 10px; font-size: 13px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
 .message.assistant .message-bubble { background: #f1eee7; border-bottom-left-radius: 2px; }
 .message.user .message-bubble { color: white; background: var(--green-dark); border-bottom-right-radius: 2px; }
+.message-sources { display: grid; gap: 5px; margin-top: 11px; padding-top: 9px; border-top: 1px solid rgba(41, 42, 39, .12); }
+.message-sources-label { color: var(--muted); font-size: 10px; font-weight: 600; }
+.message-sources a { width: fit-content; color: var(--green-dark); font-size: 10px; line-height: 1.5; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 .typing { display: flex; gap: 5px; align-items: center; min-width: 55px; height: 39px; }
 .typing i { width: 5px; height: 5px; border-radius: 50%; background: #82867c; animation: pulse 1s infinite ease-in-out; }
 .typing i:nth-child(2) { animation-delay: .15s; }.typing i:nth-child(3) { animation-delay: .3s; }
