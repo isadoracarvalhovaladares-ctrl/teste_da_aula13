@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3efe7">
+    <title>Entrelinhas | Parceira literária</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="app-shell">
+        <aside class="project-sidebar" aria-label="Contexto do projeto">
+            <a class="wordmark" href="/" aria-label="Entrelinhas, início"><span class="wordmark-icon">e</span><span>entrelinhas</span></a>
+            <button class="new-project" id="newProject" type="button"><span aria-hidden="true">＋</span> Novo projeto</button>
+            <section class="project-editor">
+                <div class="section-label"><label for="projectName">PROJETO ATUAL</label><span id="savedStatus">Salvo</span></div>
+                <input id="projectName" type="text" maxlength="80" placeholder="Nome da história">
+                <label class="context-label" for="projectContext">Caderno de contexto</label>
+                <textarea id="projectContext" placeholder="Sinopse, personagens, mundo, conflitos e detalhes que precisam permanecer consistentes..."></textarea>
+            </section>
+            <p class="sidebar-note"><span aria-hidden="true">✳</span> Você decide o que fica na página.</p>
+        </aside>
+
+        <section class="conversation" aria-label="Conversa literária">
+            <header class="topbar">
+                <div><p class="overline">ATELIÊ DE ESCRITA</p><h1 id="activeProjectTitle">Uma página em branco</h1></div>
+                <span class="partner-status"><i></i> Pronta para conversar</span>
+            </header>
+            <div class="conversation-scroll" id="chatScroll">
+                <div class="conversation-content" id="chatMessages">
+                    <div class="welcome" id="welcome">
+                        <span class="welcome-mark" aria-hidden="true">¶</span>
+                        <p class="overline">BEM-VINDA AO SEU ATELIÊ</p>
+                        <h2>Toda história começa<br>com uma boa pergunta.</h2>
+                        <p class="welcome-copy">Traga uma ideia, um trecho ou um impasse. Vamos pensar juntas, mantendo sua voz no centro.</p>
+                    </div>
+                    <div class="prompt-list" id="suggestions">
+                        <button type="button" data-prompt="Tenho uma ideia inicial para uma história. Ajude-me a encontrar o que há de mais interessante nela.">Desenvolver uma ideia <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-prompt="Estou travada no desenvolvimento do conflito. Faça algumas perguntas para me ajudar a encontrar caminhos.">Destravar o conflito <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-prompt="Quero aprofundar um personagem sem cair em clichês. Por onde podemos começar?">Aprofundar personagem <span aria-hidden="true">↗</span></button>
+                    </div>
+                </div>
+            </div>
+            <footer class="composer-area">
+                <form id="chatForm" class="composer">
+                    <textarea id="messageInput" rows="1" maxlength="4000" aria-label="Mensagem" placeholder="Escreva sua mensagem..."></textarea>
+                    <button class="send-button" id="sendButton" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0L6 11m6-6 6 6"/></svg>
+                    </button>
+                </form>
+                <p class="composer-caption">A IA sugere. A autoria continua sendo sua.</p>
+            </footer>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
