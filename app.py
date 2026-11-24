@@ -66,9 +66,17 @@ def chat():
 
     try:
         return jsonify(reply=generate_reply(messages))
-    except Exception:
+    except Exception as exc:
         app.logger.exception("Falha ao gerar resposta da parceira literária")
-        return jsonify(error="Não foi possível gerar uma resposta. Confira a chave e tente novamente."), 500
+        if getattr(exc, "code", None) == "credit_balance_exhausted":
+            message = "A conta da API OpenAI está sem créditos. Adicione saldo ou verifique o faturamento da conta associada à chave."
+        elif getattr(exc, "status_code", None) == 429:
+            message = "A API está temporariamente no limite de uso. Aguarde um pouco e tente novamente."
+        elif type(exc).__name__ == "AuthenticationError":
+            message = "A chave da API não foi aceita. Confira OPENAI_API_KEY no arquivo .env."
+        else:
+            message = "Não foi possível gerar uma resposta. Confira a configuração da API e tente novamente."
+        return jsonify(error=message), 502
 
 
 if __name__ == "__main__":
