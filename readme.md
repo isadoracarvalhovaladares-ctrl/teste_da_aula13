@@ -17,3 +17,7 @@ Parceira literária em português, feita com Flask, HTML, CSS e JavaScript. O ca
 4. Inicie o servidor com `py app.py` e acesse `http://127.0.0.1:5000`.
 
 O arquivo `.env` é ignorado pelo Git para que a chave não seja enviada ao repositório. Para compatibilidade, o servidor também aceita a chave em `OPENAI_API_KEY`.
+
+## Pesquisa na web
+
+Mensagens com a palavra `pesquise` ou pedidos sobre informações atuais, como notícias, preços, clima e resultados recentes, acionam a busca web. A resposta recebe os resultados como contexto e mostra links clicáveis para as fontes consultadas. A busca usa DDGS, com fallback entre mecanismos quando uma consulta não retorna resultados.
