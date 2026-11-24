@@ -15,15 +15,15 @@ Evite respostas genéricas, repetitivas, desconexas ou excessivamente longas."""
 
 
 def generate_reply(messages):
-    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    api_key = (os.getenv("GROQ_API_KEY") or os.getenv("OPENAI_API_KEY", "")).strip()
     if not api_key:
-        raise RuntimeError("Adicione sua chave em OPENAI_API_KEY no arquivo .env.")
+        raise RuntimeError("Adicione sua chave em GROQ_API_KEY no arquivo .env.")
 
-    from openai import OpenAI
+    from groq import Groq
 
-    client = OpenAI(api_key=api_key)
+    client = Groq(api_key=api_key)
     response = client.chat.completions.create(
-        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
         messages=messages,
         temperature=0.8,
         max_tokens=900,
@@ -68,12 +68,12 @@ def chat():
         return jsonify(reply=generate_reply(messages))
     except Exception as exc:
         app.logger.exception("Falha ao gerar resposta da parceira literária")
-        if getattr(exc, "code", None) == "credit_balance_exhausted":
-            message = "A conta da API OpenAI está sem créditos. Adicione saldo ou verifique o faturamento da conta associada à chave."
+        if getattr(exc, "code", None) in {"credit_balance_exhausted", "insufficient_quota"}:
+            message = "A conta da API Groq está sem créditos ou atingiu o limite de uso. Verifique o plano e os limites da conta."
         elif getattr(exc, "status_code", None) == 429:
-            message = "A API está temporariamente no limite de uso. Aguarde um pouco e tente novamente."
+            message = "A API Groq está temporariamente no limite de uso. Aguarde um pouco e tente novamente."
         elif type(exc).__name__ == "AuthenticationError":
-            message = "A chave da API não foi aceita. Confira OPENAI_API_KEY no arquivo .env."
+            message = "A chave da API não foi aceita. Confira GROQ_API_KEY no arquivo .env."
         else:
             message = "Não foi possível gerar uma resposta. Confira a configuração da API e tente novamente."
         return jsonify(error=message), 502
